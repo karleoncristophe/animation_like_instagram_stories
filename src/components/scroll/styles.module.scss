@@ -1,0 +1,10 @@
+.wrapper {
+   display: flex;
+   flex-direction: row;
+   width: min(1000px, 100%);
+   margin: 0px auto;
+   overflow: hidden;
+   margin-top: 20px;
+   align-items: center;
+   transition: all 1s;
+}
