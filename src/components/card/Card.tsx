@@ -1,7 +1,5 @@
 'use client'
-import { Scroll } from '../scroll/Scroll'
 import styles from './styles.module.scss'
-
 import React, { useState } from 'react'
 
 type Props = {
@@ -9,68 +7,66 @@ type Props = {
 }
 
 export const Card: React.FC<Props> = ({ data }) => {
-  const [current, setCurrent] = useState(0)
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [translate, setTranslate] = useState(300)
+  const [currentIndex, setCurrentIndex] = useState(1)
 
   return (
-    <Scroll>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          background: 'pink',
-          transition: 'ease-in 300ms',
-          transform: `translateX(${translate}px)`,
-        }}
-      >
+    <div className={styles.body}>
+      <ul className={styles.list}>
         {data.map((item, index) => {
+          const idx = index + 1
+          const left =
+            currentIndex === 1
+              ? `calc(calc(100vw / 2 - 25rem) + calc(${idx} * 25rem))`
+              : `calc(calc(100vw / 2 - calc(${currentIndex} * 25rem)) + calc(${idx} * 25rem))`
+
           return (
-            <div
+            <li
               key={index}
-              className={
-                current === index
-                  ? `${styles.wrapperActive}`
-                  : `${styles.wrapper}`
-              }
+              id={`${idx}`}
+              className={`${styles.card} ${
+                currentIndex === idx && styles.active
+              }`}
               style={{
-                transformOrigin: current > index ? 'left' : 'right',
+                left,
               }}
             >
-              <div
-                className={
-                  current === index ? `${styles.cardActive}` : `${styles.card}`
-                }
+              <button
+                disabled={currentIndex === 1}
+                onClick={() => {
+                  setCurrentIndex(currentIndex - 1)
+                  console.log('back')
+                }}
+                className={`${styles.button} ${styles.back}`}
               >
-                <button
-                  className={`${styles.button} ${styles.back}`}
-                  disabled={index <= 0}
-                  onClick={() => {
-                    setTranslate(translate + 200)
+                back
+              </button>
+              {idx}
+              <button
+                disabled={currentIndex === data.length + 1 - 1}
+                onClick={() => setCurrentIndex(idx + 1)}
+                className={`${styles.button} ${styles.next}`}
+              >
+                next
+              </button>
+              {/* mobile --> */}
+              <button
+                disabled={currentIndex === 1}
+                onClick={() => {
+                  setCurrentIndex(currentIndex - 1)
+                  console.log('back')
+                }}
+                className={`${styles.buttonMobile} ${styles.back}`}
+              />
 
-                    setCurrent(current - 1)
-                    setCurrentIndex(index)
-                  }}
-                >
-                  back
-                </button>
-                <button
-                  className={`${styles.button} ${styles.next}`}
-                  onClick={() => {
-                    setCurrent(current + 1)
-                    setCurrentIndex(index)
-
-                    setTranslate(translate - 200)
-                  }}
-                  disabled={data.length > data[data.length - 1]}
-                >
-                  next
-                </button>
-              </div>
-            </div>
+              <button
+                disabled={currentIndex === data.length + 1 - 1}
+                onClick={() => setCurrentIndex(idx + 1)}
+                className={`${styles.buttonMobile} ${styles.next}`}
+              />
+            </li>
           )
         })}
-      </div>
-    </Scroll>
+      </ul>
+    </div>
   )
 }
